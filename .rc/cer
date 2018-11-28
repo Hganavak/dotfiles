@@ -11,7 +11,7 @@ function sup() {
 	       ;;
 	"api"|"cer") cd ~/Documents/research-hub-deploy/build/cer-api
 	       ;;
-	"db") mysql -h $(docker inspect hub_db_1 | jq --raw-output .[].NetworkSettings.Networks.hub_default.IPAddress) -P 3306 -u root -p123
+	"db") mysql -h $(docker inspect hub_db_1 | jq --raw-output .[].NetworkSettings.Networks.hub_default.IPAddress) -P 3306 -u root -p123 # Only applicable to my local instance, sorry hackers :-(
 	       ;;
 	"sc") cd ~/Documents/Software-Carpentry
 	      ;;
