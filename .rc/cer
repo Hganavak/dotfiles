@@ -1,0 +1,56 @@
+################################################################################## 
+# A collection of helper commands related to my work at the Centre for eResearch # 
+################################################################################## 
+
+# Whatup CeR!
+function sup() {
+    case $1 in
+	"hub") cd ~/Documents/research-hub-deploy
+	       ;;
+	"web") cd ~/Documents/research-hub-deploy/build/research-hub-web
+	       ;;
+	"api"|"cer") cd ~/Documents/research-hub-deploy/build/cer-api
+	       ;;
+	"db") mysql -h $(docker inspect hub_db_1 | jq --raw-output .[].NetworkSettings.Networks.hub_default.IPAddress) -P 3306 -u root -p123
+	       ;;
+	"sc") cd ~/Documents/Software-Carpentry
+	      ;;
+	"ci"|"cerci") ssh skav012@cerciprd01.its.auckland.ac.nz
+	      ;;
+	"reg"|"registry") ssh -t skav012@cerciprd01.its.auckland.ac.nz '
+			  for repo in $(curl --silent localhost:5000/v2/_catalog | jq -r .repositories[]); do
+			      curl --silent localhost:5000/v2/${repo}/tags/list | jq .;
+			  done;'
+		;;
+	"dev") ssh skav012@cerhubpdev02.its.auckland.ac.nz
+	      ;;
+	"test") ssh skav012@cerhubptest01.its.auckland.ac.nz
+	      ;;
+	"prod") ssh skav012@rhubprd01.its.auckland.ac.nz
+	      ;;
+	"sam") ssh skav012@sam.cer.auckland.ac.nz
+	      ;;
+	"jenkins") ssh -L 8080:localhost:8080 skav012@cerciprd01.its.auckland.ac.nz -fN
+		xdg-open 'http://localhost:8080' > /dev/null 2>&1 & disown
+	      ;;
+	"isolation") sudo pkill ssh 
+	      ;;
+	*) echo "Usage: sup [hub/web/api/sc] [dev/test/prod/jenkins/reg/sam] [isolation]"
+              ;;
+    esac
+}
+
+# Rebuild, and redeploy... resurrect!
+function res() {
+	if [ -z $1 ]; then
+		echo "Usage: res [web/api/cer]";
+	else
+		echo "Rebuilding and redploying...";
+		source ~/Documents/research-hub-deploy/config/hub.env;
+		cd ~/Documents/research-hub-deploy/build;
+                if [ $1 = "web" ]; then
+			docker-compose -f docker-compose.yml -f research-hub-web/docker-compose.yml up -d --build;
+              	fi 
+	fi
+}
+

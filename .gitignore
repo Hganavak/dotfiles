@@ -1,0 +1,8 @@
+# Blacklist all files/folders in root directory
+/*
+
+# Except .gitignore, .bashrc, .bash_aliases, and the contents of .rc/
+!.gitignore
+!.bashrc
+!.bash_aliases
+!.rc/
