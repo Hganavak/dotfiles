@@ -5,37 +5,49 @@
 # Whatup CeR!
 function sup() {
     case $1 in
-	"hub") cd ~/Documents/research-hub-deploy
+	"hub") cd ~/Documents/research-hub-deploy; xdg-open 'http://localhost:8081' > /dev/null 2>&1 & disown; ./hubby-local up 
 	       ;;
-	"web") cd ~/Documents/research-hub-deploy/build/research-hub-web
+	"web") cd ~/Documents/research-hub-deploy/repos/research-hub-web
 	       ;;
-	"api"|"cer") cd ~/Documents/research-hub-deploy/build/cer-api
+	"api"|"cer") cd ~/Documents/research-hub-deploy/repos/cer-api
 	       ;;
 	"db") mysql -h $(docker inspect hub_db_1 | jq --raw-output .[].NetworkSettings.Networks.hub_default.IPAddress) -P 3306 -u root -p123 # Only applicable to my local instance, sorry hackers :-(
 	       ;;
 	"sc") cd ~/Documents/Software-Carpentry
 	      ;;
-	"ci"|"cerci") ssh skav012@cerciprd01.its.auckland.ac.nz
+	"rb") cd ~/Documents/resbaz
+	      ;;
+	"hg") cd ~/Documents/hganavak.github.io
+	      ;;
+	"ci"|"cerci") gnome-terminal --window-with-profile=SSH -- ssh skav012@cerciprd01.its.auckland.ac.nz
 	      ;;
 	"reg"|"registry") ssh -t skav012@cerciprd01.its.auckland.ac.nz '
 			  for repo in $(curl --silent localhost:5000/v2/_catalog | jq -r .repositories[]); do
 			      curl --silent localhost:5000/v2/${repo}/tags/list | jq .;
 			  done;'
 		;;
-	"dev") ssh skav012@cerhubpdev02.its.auckland.ac.nz
+	"graph") cd ~/Documents/contentful-graph/contentful-graph && source tokens && contentful-graph | dot -Tpng > model.png && xdg-open model.png
+		;;
+	"stack") cd ~/Documents/research-hub-deploy/ && ./hubby-local up -d && cd --
+		;;
+	"dev") gnome-terminal --window-with-profile=SSH -- ssh skav012@cerhubpdev02.its.auckland.ac.nz
 	      ;;
-	"test") ssh skav012@cerhubptest01.its.auckland.ac.nz
+	"test") gnome-terminal --window-with-profile=SSH -- ssh skav012@cerhubptest01.its.auckland.ac.nz
 	      ;;
-	"prod") ssh skav012@rhubprd01.its.auckland.ac.nz
+	"prod") gnome-terminal --window-with-profile=SSH -- ssh skav012@rhubprd01.its.auckland.ac.nz
 	      ;;
-	"sam") ssh skav012@sam.cer.auckland.ac.nz
+	"sam")  gnome-terminal --window-with-profile=SSH -- ssh skav012@sam.cer.auckland.ac.nz
 	      ;;
 	"jenkins") ssh -L 8080:localhost:8080 skav012@cerciprd01.its.auckland.ac.nz -fN
 		xdg-open 'http://localhost:8080' > /dev/null 2>&1 & disown
 	      ;;
 	"isolation") sudo pkill ssh 
 	      ;;
-	*) echo "Usage: sup [hub/web/api/sc] [dev/test/prod/jenkins/reg/sam] [isolation]"
+	"screens") xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x624 --rotate normal --output DP-1-1 --off --output HDMI-1 --mode 2560x1440 --pos 1920x0 --rotate normal --output DP-1-3 --off --output DP-1-2 --mode 1920x1200 --pos 4480x0 --rotate normal --output DP-1 --off --output HDMI-2 --off
+	      ;;
+	"screens") xrandr --output eDP-1 --primary --mode 1920x1080 --pos 640x1440 --rotate normal --output DP-1-1 --off --output HDMI-1 --mode 2560x1440 --pos 0x0 --rotate normal --output DP-1-3 --off --output DP-1-2 --mode 1920x1200 --pos 2560x0 --rotate left --output DP-1 --off --output HDMI-2 --off
+	      ;;
+	*) echo "Usage: sup [hub/web/api/sc/rb/hg] [dev/test/prod/jenkins/reg/sam] [isolation] [stack] [screens]"
               ;;
     esac
 }
@@ -54,3 +66,45 @@ function res() {
 	fi
 }
 
+# Connect to DB using MySQL client
+sql() {
+        case $1 in
+                "dev") ssh -t skav012@cerhubpdev02.its.auckland.ac.nz 'source /data/research-hub-deploy/config/hub.env; ip=$(sudo docker inspect hub_db_1 | jq --raw-output .[].NetworkSettings.Networks.hub_default.IPAddress); mysql -h $ip -P3306 -u root -p$DB_MYSQL_PASSWORD';;
+                "test") ssh -t skav012@cerhubptest01.its.auckland.ac.nz 'source /data/research-hub-deploy/config/hub.env; ip=$(sudo docker inspect hub_db_1 | jq --raw-output .[].NetworkSettings.Networks.hub_default.IPAddress); mysql -h $ip -P3306 -u root -p$DB_MYSQL_PASSWORD';;
+                "prod") ssh -t skav012@rhubprd01.its.auckland.ac.nz 'source /data/research-hub-deploy/config/hub.env; ip=$(sudo docker inspect hub_db_1 | jq --raw-output .[].NetworkSettings.Networks.hub_default.IPAddress); mysql -h $ip -P3306 -u root -p$DB_MYSQL_PASSWORD';;
+        esac
+}
+
+# Functions on 1 or more hosts
+function hosts() {
+	creds="" # Enter Jenkins credentials here
+	case $1 in
+		"request")
+			echo "Requested hosts status, run 'hosts list' to get the latest results."
+			curl -X POST http://localhost:8080/job/research-hub-servers-status/build --user $creds
+
+		;;
+		"list")
+			curl -X POST http://localhost:8080/job/research-hub-servers-status/lastBuild/consoleText --user $creds
+		;;
+		*) echo "Usage: hosts [request/list]"
+		;;
+	esac
+}
+
+# Host, Service, Image
+function deploy() {
+	if [[ $# -eq 3 ]] ; then
+		echo -e "Host: $1, Service: $2, Image: $3"
+
+		creds="" # Enter Jenkins credentials here
+		TAGS_APPEND="TAG_${2^^}=${3} # $(date) SK"
+		curl -X POST --user $creds "http://localhost:8080/job/research-hub-ansible-deploy/buildWithParameters"\
+			 --data-urlencode "TARGET_HOST=hub-${1}"\
+			 --data-urlencode "SERVICE_NAME=${2}"\
+			 --data-urlencode "TAGS_APPEND=${TAGS_APPEND}"\
+			 --data-urlencode "UP_ARGS=--force-recreate"
+	else
+		echo 'Usage: deploy [dev/test/prod] [web/api/proxy/db/cer-api] [image-name]';
+	fi
+}
