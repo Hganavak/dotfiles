@@ -1,0 +1,16 @@
+function idea() {
+	cd ~/Documents/ideas
+	git pull --quiet
+	echo -e $(date) "\n$1\n" >> idea-log
+	git commit -am "$1" --quiet
+	git push --quiet
+	cd - > /dev/null
+	echo -e "Idea added"
+}
+
+function ideas() {
+	cd ~/Documents/ideas
+	git pull --quiet
+	cat idea-log
+	cd - > /dev/null
+}
