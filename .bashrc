@@ -17,6 +17,7 @@ shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=1000
+
 HISTFILESIZE=2000
 
 # check the window size after each command and, if necessary,
@@ -115,7 +116,7 @@ export PATH="/home/sam/anaconda3/bin:$PATH"
 
 ## Create and destroy a single-purpose temporary directory (tarbomb protection):
 alias tmp='mkdir /tmp/$$ ; cd /tmp/$$'
-alias untmp='rm -rf /tmp/$$'
+alias untmp='rm -rf /tmp/$$; cd --'
 
 ## Print a colorful horizontal line to break up chunks of commands/output:
 alias hr='printf $(printf "\e[$(shuf -i 91-97 -n 1);1m%%%ds\e[0m\n" $(tput cols)) | tr " " ='
@@ -184,3 +185,37 @@ function sams_prompt
 	# PS1="${RC}\W${DF}${HC} ${SC}${DF} $(__git_ps1 '(%s)')${DF} " # Minimal variant
 }
 
+# HUB_PATH. Used all over the show
+export HUB_PATH=/home/sam/Documents/research-hub-deploy
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Make a directory and cd into it
+function mkd() {
+	mkdir -p $1
+	cd $1
+}
+
+# Laravel
+export PATH=~/.config/composer/vendor/bin:$PATH
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+export PATH="$HOME/gems/bin:$PATH"
+# added by Anaconda3 2018.12 installer
+# >>> conda init >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$(CONDA_REPORT_ERRORS=false '/home/sam/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    \eval "$__conda_setup"
+else
+    if [ -f "/home/sam/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/sam/anaconda3/etc/profile.d/conda.sh"
+        CONDA_CHANGEPS1=false conda activate base
+    else
+        \export PATH="/home/sam/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda init <<<
