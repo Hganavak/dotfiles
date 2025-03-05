@@ -1,8 +1,8 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-# Path to your oh-my-zsh installation.
-export ZSH="/Users/skav012/.oh-my-zsh"
+# Path to your ohh-my-zsh installation.
+export ZSH="/Users/sam/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -12,6 +12,11 @@ ZSH_THEME="agnoster"
 #ZSH_THEME="amuse"
 #ZSH_THEME="avit"
 #ZSH_THEME="bira"
+#ZSH_THEME="clean"
+#ZSH_THEME="half-life"
+#ZSH_THEME="jonathan"
+#ZSH_THEME="wedisagree"
+
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -102,7 +107,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 prompt_context(){} # Hide user@hostname when your logged in as self
 
-code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}
+#code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* ;}
 
 # Custom Aliases/functions
 unalias gcp; # From zsh
@@ -128,11 +133,11 @@ function gcps() {
 alias todo="grep -Rni 'TODO:' . --exclude-dir=node_modules -B 3 -A 3"
 
 # CeR-GraphQL env variables
-export CONTENTFUL_ACCESS_TOKEN=hWFTaut-fsZZ7gk8lmCHxY_OohuOO9wJziENjstWghk
-export CONTENTFUL_SPACE_ID=vbuxn5csp0ik
-export COGNITO_USER_POOL=ap-southeast-2_pgErjyL4O
-export COGNITO_REGION=ap-southeast-2
-export CONTENTFUL_MANAGEMENT_TOKEN=CFPAT-60F-yz6WQR6YD0aUaWX96SS2RK0PQLvJRO0_AheyC9M
+#export CONTENTFUL_ACCESS_TOKEN=hWFTaut-fsZZ7gk8lmCHxY_OohuOO9wJziENjstWghk
+#export CONTENTFUL_SPACE_ID=vbuxn5csp0ik
+#export COGNITO_USER_POOL=ap-southeast-2_pgErjyL4O
+#export COGNITO_REGION=ap-southeast-2
+#export CONTENTFUL_MANAGEMENT_TOKEN=CFPAT-60F-yz6WQR6YD0aUaWX96SS2RK0PQLvJRO0_AheyC9M
 
  function idea() {
      cd ~/ideas # cd to idea-log repo directory
@@ -170,60 +175,41 @@ function _accept-line() {
 zle -N accept-line _accept-line
 
 # Whatup CeR!
-function sup() {
-    case $1 in
-	"ci"|"cerci") ssh skav012@cerciprd01.its.auckland.ac.nz
-	      ;;
-	"reg"|"registry") ssh -t skav012@cerciprd01.its.auckland.ac.nz '
-			  for repo in $(curl --silent localhost:5000/v2/_catalog | jq -r .repositories[]); do
-			      curl --silent localhost:5000/v2/${repo}/tags/list | jq .;
-			  done;'
-		;;
-	"graph") cd ~/Documents/contentful-graph/contentful-graph && source tokens && contentful-graph | dot -Tpng > model.png && xdg-open model.png
-		;;
-	"stack") cd ~/Documents/research-hub-deploy/ && ./hubby-local up -d && cd --
-		;;
-	"dev") gnome-terminal --window-with-profile=SSH -- ssh skav012@cerhubpdev02.its.auckland.ac.nz
-	      ;;
-	"test") gnome-terminal --window-with-profile=SSH -- ssh skav012@cerhubptest01.its.auckland.ac.nz
-	      ;;
-	"prod") gnome-terminal --window-with-profile=SSH -- ssh skav012@rhubprd01.its.auckland.ac.nz
-	      ;;
-	"sam")  gnome-terminal --window-with-profile=SSH -- ssh skav012@sam.cer.auckland.ac.nz
-	      ;;
-	"figshare")  ssh skav012@figshare-hr.its.auckland.ac.nz
-	      ;;
-	"eres")  ssh skav012@cli.cer.auckland.ac.nz
-	      ;;
-	"jenkins") ssh -L 8080:localhost:8080 skav012@cerciprd01.its.auckland.ac.nz -fN
-		xdg-open 'http://localhost:8080' > /dev/null 2>&1 & disown
-	      ;;
-	"isolation") sudo pkill ssh 
-	      ;;
-	*) echo "Usage: sup [hub/web/api/sc/rb/hg] [dev/test/prod/jenkins/reg/sam] [eres/figshare] [isolation] [stack] [screens]"
-              ;;
-    esac
-}
+#function sup() {
+#    case $1 in
+#	"ci"|"cerci") ssh skav012@cerciprd01.its.auckland.ac.nz
+#	      ;;
+#	"reg"|"registry") ssh -t skav012@cerciprd01.its.auckland.ac.nz '
+#			  for repo in $(curl --silent localhost:5000/v2/_catalog | jq -r .repositories[]); do
+#			      curl --silent localhost:5000/v2/${repo}/tags/list | jq .;
+#			  done;'
+#		;;
+#	"graph") cd ~/Documents/contentful-graph/contentful-graph && source tokens && contentful-graph | dot -Tpng > model.png && xdg-open model.png
+#		;;
+#	"stack") cd ~/Documents/research-hub-deploy/ && ./hubby-local up -d && cd --
+#		;;
+#	"dev") gnome-terminal --window-with-profile=SSH -- ssh skav012@cerhubpdev02.its.auckland.ac.nz
+#	      ;;
+#	"test") gnome-terminal --window-with-profile=SSH -- ssh skav012@cerhubptest01.its.auckland.ac.nz
+#	      ;;
+#	"prod") gnome-terminal --window-with-profile=SSH -- ssh skav012@rhubprd01.its.auckland.ac.nz
+#	      ;;
+#	"sam")  gnome-terminal --window-with-profile=SSH -- ssh skav012@sam.cer.auckland.ac.nz
+#	      ;;
+#	"figshare")  ssh skav012@figshare-hr.its.auckland.ac.nz
+#	      ;;
+#	"eres")  ssh skav012@cli.cer.auckland.ac.nz
+#	      ;;
+#	"jenkins") ssh -L 8080:localhost:8080 skav012@cerciprd01.its.auckland.ac.nz -fN
+#		xdg-open 'http://localhost:8080' > /dev/null 2>&1 & disown
+#	      ;;
+#	"isolation") sudo pkill ssh 
+#	      ;;
+#	*) echo "Usage: sup [hub/web/api/sc/rb/hg] [dev/test/prod/jenkins/reg/sam] [eres/figshare] [isolation] [stack] [screens]"
+#              ;;
+#    esac
+#}
 
-
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/skav012/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/skav012/opt/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/skav012/opt/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/skav012/opt/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-# Get Temporary AWS credentials
-alias creds='python3 ~/uoa-sts-cli-access/aws_saml_login.py --idp iam.auckland.ac.nz --role devops --account "UoA Sandbox" --user skav012 --profile=default'
 
 
 # @!#@!@$#@$#** Boom @!#@!@$#@$#** 
@@ -233,6 +219,7 @@ alias creds='python3 ~/uoa-sts-cli-access/aws_saml_login.py --idp iam.auckland.a
 quiet() {
     "$@" > /dev/null 2>&1
 }
+
 function boom() {
         echo "Boom! Creating Git & GitHub repo. Please wait..."
         # If a param is passed, create a dir with that name and cd to it
@@ -245,34 +232,68 @@ function boom() {
                 quiet echo "# ${PWD##*/}" > README.md
                 echo "Generated a README.md file"
         fi
-        quiet git init
-        quiet git add .
-        quiet git commit -m "Initial commit"
-        quiet hub create -p # -p create private GitHub repo
-        quiet git push -u origin master
+        git init
+        git add .
+        git commit -m "Initial commit"
+        #quiet gh create -p # -p create private GitHub repo
+        gh repo create ${PWD##*/} --private --source=. --remote=origin
+	# gh repo create ${PWD##*/} --private -y
+        git push -u origin main
         echo "Boom! Your repo is live: $(git config --get remote.origin.url)" # Output repo URL
 }
 
 # @!#@!@$#@ END Boom @!#@!@$#@$#** 
 
 alias cnpmi='rm -rf node_modules/; rm package-lock.json; npm i'
-alias hubby='cd /Users/skav012/hub-stack/research-hub-web; ahoy 4000; npm run qdev'
-alias gql='cd ~/hub-stack/cer-graphql; npm run dev'
+#alias hubby='cd /Users/skav012/hub-stack/research-hub-web; ahoy 4000; npm run qdev'
+#alias gql='cd ~/hub-stack/cer-graphql; npm run dev'
 
 # Add all files, commit to feature branch, push feature branch, checkout your sandbox-, pull, merge in your feature branch, push, switch back to your feature
+#function deploy() {
+#        git add --all
+#        git commit -m "$1"
+#        git push
+#        branch=$(git symbolic-ref --short -q HEAD)
+#        git checkout sandbox-sam # <----------------------- Change this to yours
+#        git pull
+#        git merge $branch
+#        git push
+#        git checkout $branch
+#}
+
+# GCD Implimentation
 function deploy() {
-        git add --all
-        git commit -m "$1"
-        git push
-        branch=$(git symbolic-ref --short -q HEAD)
-        git checkout sandbox-sam # <----------------------- Change this to yours
-        git pull
-        git merge $branch
-        git push
+	if [[ "$1" != "taupo"  &&  "$1" != "rotorua" &&  "$1" != "uat" && "$1" != "taupo2" && "$1" != "rotorua2" && "$1" != "uat2" ]]; then
+		echo "Usage: deploy [taupo, rotorua, uat, taupo2, rotorua2, uat2]" && return;
+	fi 
+
+        branch=$(git symbolic-ref --short -q HEAD) # Current branch
+	new_branch="${1}/${branch}" # New branch
+	sep="\n==============================================================================================\n"
+
+	echo "${sep}Deploying to: ${new_branch}...${sep}"
+
+	# Check if branch is already known (either locally or remotely)
+	existed_in_local=$(git branch --list "$new_branch")
+	existed_in_remote=$(git ls-remote --heads origin "$new_branch")
+
+	if [[ -z ${existed_in_remote} || -z ${existed_in_local} ]]; then # New branch
+		echo "${sep}This feature has not been deployed to $1 before. Creating a new branch${sep}"
+	        git checkout -b "$new_branch" 
+	        git push -u origin "${1}/${branch}"
+	else # Existing branch
+		echo "${sep}This branch has been deployed before. Re-deploying to $new_branch${sep}"
+	        git checkout "$new_branch" 
+		git pull --ff-only # Check if there's been any updates to the existing branch
+	        git merge $branch
+		git push
+	fi
+
         git checkout $branch
+	echo "${sep}Deployed $branch to ${1}/${branch}\nYou are now back on $branch${sep}"
 }
 
-alias search='. /Users/skav012/elastic/test-queries/search2.sh'
+#alias search='. /Users/skav012/elastic/test-queries/search2.sh'
 alias rec='asciinema rec'
 alias sandbox"=export SCHEMA_PATH='https://rhubcpapi.sandbox.amazon.auckland.ac.nz/'; export BRANCH_NAME='sandbox'"
 alias bashmon="nodemon -q $1 --exec '. $1'"
@@ -281,3 +302,113 @@ alias dog="highlight $1"
 # tabtab source for packages
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/__tabtab.zsh ]] && . ~/.config/tabtab/__tabtab.zsh || true
+
+export PATH=/usr/local/bin:$PATH
+
+# ~~~~~~ Limelight Settings ~~~~~~ #
+#SERVICE="limelight"
+#if pgrep -x "$SERVICE" >/dev/null
+#then
+#       echo "$SERVICE is running"
+#else
+#	echo "$SERVICE stopped"
+#	killall limelight &> /dev/null
+#	limelight &> /dev/null &!
+#	sleep 2
+#	limelight -m config width            3
+#	limelight -m config radius           3
+#	limelight -m config placement        exterior
+#	limelight -m config active_color     0x00FF0000
+#	limelight -m config normal_color     0xffffffff
+#fi
+# ~~~~~~ Limelight Settings ~~~~~~ #
+
+
+function hr() {
+    autoload -U colors # black, red, green, yellow, blue, magenta, cyan, and white
+    colors
+    fg_color=${1:-blue} # change blue here if you want a different default
+    printf "$fg[$fg_color]%0.s─$fg[default]" $(seq 1 $(tput cols))
+}
+
+export NODE_OPTIONS=--max_old_space_size=6144
+
+# Sentry settings
+export SENTRY_AUTH_TOKEN=51e52c0e726d4446af07100fd785c563445de73f0b4d4f7e927f82f638ff768c
+export VAULT_TOKEN=s.AvizT14ltOrmXWuFqpXyI3u0.pl3bj
+export GCD_DEV_PAT=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
+export HISTTIMEFORMAT="%d/%m/%y %T "
+#export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
+
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)
+
+
+# Enable media keys
+#launchctl load -w /System/Library/LaunchAgents/com.apple.rcd.plist
+
+
+# React Native Android settings
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export PATH="$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform:${PATH}"
+alias adb="$HOME/Library/Android/sdk/platform-tools/adb"
+export ANDROID_SDK_HOME="$ANDROID_HOME/.android"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export ANDROID_AVD_HOME="$ANDROID_HOME/.android/avd"
+
+##### START ALIASES ####
+alias n="npm run $1"
+alias taupo="n fast-serve taupo -- -o"
+alias rotorua="n fast-serve rotorua"
+alias serve="n fast-serve"
+alias scripts="cat package.json | jq .scripts"
+alias repo="gh repo view --web"
+alias mongo-start="mongod --config /opt/homebrew/etc/mongod.conf --fork"
+alias mongo-stop="pkill mongod"
+alias mongo-check="ps aux | grep -v grep | grep mongod"
+alias potato="ls -ah"
+alias npmci="rm -rf node_modules/; rm package-lock.json; npm i --legacy-peer-deps"
+alias npmli="npm i --legacy-peer-deps"
+alias clean="git clean -fd"
+alias s="source ~/.zshrc"
+alias v="vim ~/.zshrc"
+alias ts='open "http://18.117.91.244:8111/agents/overview"'
+alias oct='open "http://18.117.91.244:8112/"'
+alias portal='cd ~/milford-portal-web'
+alias dns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
+alias pls="sudo $(history -p !!)"
+alias rn="cd ~/milford-portal-mobile"
+alias d="doppler run -- $1"
+alias ds="doppler secrets"
+alias dr="doppler run -- npm run $1"
+alias douche="du -sch * | sort -h"
+alias ngc="ng g c --standalone --inline-style --inline-template --flat --skip-tests $1"
+alias play="launchctl load -w /System/Library/LaunchAgents/com.apple.rcd.plist"
+alias ngfs="npm run ngf serve"
+alias graph="git log --graph --decorate --oneline"
+alias gs="git status"
+alias gl="git log"
+alias gd="git diff"
+alias gc="git checkout $1"
+alias rn="cd ~/milford-stack/milford-portal-mobile-react-native"
+alias ffs="yarn && yarn pods && yarn start --reset-cache"
+alias ffs2="yarn && yarn prebuild --clean && yarn ios"
+alias ffs3="rm -rf node_modules/ && yarn && yarn pods && yarn start --reset-cache"
+alias recent="git pull; git for-each-ref --sort=committerdate refs/heads refs/remotes --format='%(authordate:short) %(color:red)%(objectname:short) %(color:yellow)%(refname:short)%(color:reset) (%(color:green)%(committerdate:relative)%(color:reset)) %(authorname)'"
+alias killsim="sudo killall -9 com.apple.CoreSimulator.CoreSimulatorService"
+alias g.="git checkout -- ."
+
+function search() {
+	grep --color=always -n -A 3 -B 3 "$1" $(find . -type f)
+}
+
+
+# NVM
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
+export PATH="$PATH:$(npm get prefix)/bin"
